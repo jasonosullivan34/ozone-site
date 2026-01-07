@@ -99,7 +99,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../start.html">
+                <a href="../start/index.html">
                     
                     <span>Getting Started</span>
                 </a>
@@ -117,7 +117,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../concept.html">
+                <a href="../concept/index.html">
                     
                     <span>Architecture</span>
                 </a>
@@ -165,7 +165,17 @@ s=d.getElementsByTagName('script')[0];
                     
                         <li class="">
                            
-                           <a href="../concept/ozones3gateway.html">Ozone S3 Gateway</a>
+                               <a href="../concept/ozones3gateway.html">
+                                 
+                                 <span>Ozone S3 Gateway</span>
+                               </a>
+                               <ul class="nav">
+                               
+                                  <li class="">
+                                     <a href="../concept/s3-gateway-load-balancing.html">S3 Gateway Load Balancing</a>
+                                  </li>
+                               
+                               </ul>
                            
                         </li>
                     
@@ -199,7 +209,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../feature.html">
+                <a href="../feature/index.html">
                     
                     <span>Features</span>
                 </a>
@@ -353,7 +363,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../integration.html">
+                <a href="../integration/index.html">
                     
                     <span>Application Integrations</span>
                 </a>
@@ -383,7 +393,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../interface.html">
+                <a href="../interface/index.html">
                     
                     <span>Client Interfaces</span>
                 </a>
@@ -465,7 +475,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../security.html">
+                <a href="../security/index.html">
                     
                     <span>Security</span>
                 </a>
@@ -532,7 +542,7 @@ s=d.getElementsByTagName('script')[0];
         
             <li class="">
                 
-                   <a href="../tools.html">
+                   <a href="../tools/index.html">
                 
 
                     
@@ -544,7 +554,7 @@ s=d.getElementsByTagName('script')[0];
         
             <li class="">
                 
-                   <a href="../recipe.html">
+                   <a href="../recipe/index.html">
                 
 
                     
@@ -556,7 +566,7 @@ s=d.getElementsByTagName('script')[0];
         
             <li class="">
                 
-                   <a href="../troubleshooting.html">
+                   <a href="../troubleshooting/index.html">
                 
 
                     
@@ -584,7 +594,7 @@ s=d.getElementsByTagName('script')[0];
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
-                  <li class="breadcrumb-item" aria-current="page"><a href="../feature.html">Features</a></li>
+                  <li class="breadcrumb-item" aria-current="page"><a href="../feature/index.html">Features</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Ozone Erasure Coding</li>
                 </ol>
               </nav>
@@ -767,6 +777,42 @@ any replication config or bucket does not have any default values.</p>
 </span></span><span style="display:flex;"><span>   <span style="color:#f92672">&lt;value&gt;</span>rs-3-2-1024k<span style="color:#f92672">&lt;/value&gt;</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/property&gt;</span>
 </span></span></code></pre></div><p>In the case bucket already has default EC Replication Config, there is no need of passing EC Replication Config while creating key.</p>
+<h4 id="calculating-ec-pipeline-limits">Calculating EC Pipeline Limits</h4>
+<p>The target number of open EC pipelines SCM aims to maintain is calculated dynamically for each EC replication configuration (e.g., RS-6-3, RS-3-2). The calculation is based on the following two properties, with the final target being the greater of the two resulting values.</p>
+<ul>
+<li>
+<p><code>ozone.scm.ec.pipeline.minimum</code></p>
+<ul>
+<li><strong>Description</strong>: The guaranteed minimum number of open pipelines to maintain for each EC configuration, regardless of other factors.</li>
+<li><strong>Default Value</strong>: <code>5</code></li>
+</ul>
+</li>
+<li>
+<p><code>ozone.scm.ec.pipeline.per.volume.factor</code></p>
+<ul>
+<li><strong>Description</strong>: A factor used to calculate a target number of pipelines based on the total number of healthy volumes across all datanodes in the cluster.</li>
+<li><strong>Default Value</strong>: <code>1.0</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>Calculation Logic:</strong></p>
+<p>SCM first calculates a volume-based target using the formula:
+<code>(&lt;pipeline.per.volume.factor&gt; * &lt;total healthy volumes&gt;) / &lt;required nodes for EC config&gt;</code></p>
+<p>The final target number of pipelines is then determined by:
+<code>max(&lt;volume-based target&gt;, &lt;pipeline.minimum&gt;)</code></p>
+<p><strong>Example:</strong></p>
+<p>Consider a cluster with <strong>200 total healthy volumes</strong> across all datanodes and an EC policy of <strong>RS-6-3</strong> (which requires 9 nodes).</p>
+<ul>
+<li><code>ozone.scm.ec.pipeline.minimum</code> = <strong>5</strong> (default)</li>
+<li><code>ozone.scm.ec.pipeline.per.volume.factor</code> = <strong>1.0</strong> (default)</li>
+</ul>
+<ol>
+<li>The volume-based target is: <code>(1.0 * 200) / 9 = 22</code></li>
+<li>The final target is: <code>max(22, 5) = 22</code></li>
+</ol>
+<p>SCM will attempt to create and maintain approximately <strong>22</strong> open, RS-6-3 EC pipelines.</p>
+<p><strong>Production Recommendation:</strong></p>
+<p>The default values are a good starting point for most clusters. If you have a very high number of volumes and a write-heavy EC workload, you might consider slightly increasing the <code>pipeline.per.volume.factor</code>. Conversely, for read-heavy workloads, the default minimum of 5 pipelines is often sufficient.</p>
 <h3 id="enable-intel-isa-l">Enable Intel ISA-L</h3>
 <p>Intel Intelligent Storage Acceleration Library (ISA-L) is an open-source collection of optimized low-level functions used for
 storage applications. Enabling ISA-L allows significantly improve EC performance.</p>
@@ -797,7 +843,7 @@ The default value of java.library.path depends on the OS and Java version. For e
 <footer class="footer">
   <div class="container">
     <span class="small text-muted">
-      Version: 2.2.0-SNAPSHOT, Last Modified: March 27, 2025 <a class="hide-child link primary-color" href="https://github.com/apache/ozone/commit/ce003e898bcb8256127e0bbb88351db123b10786">ce003e898b</a>
+      Version: 2.2.0-SNAPSHOT, Last Modified: January 3, 2026 <a class="hide-child link primary-color" href="https://github.com/apache/ozone/commit/ac7a9a90f205c742c711b08c879d0a0c72385d44">ac7a9a90f2</a>
     </span>
   </div>
 </footer>

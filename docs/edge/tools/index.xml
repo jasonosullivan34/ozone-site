@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tools on Ozone</title>
-    <link>/tools.html</link>
+    <link>/tools/index.html</link>
     <description>Recent content in Tools on Ozone</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 17 Nov 2025 10:14:28 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 05 Dec 2025 00:00:41 -0800</lastBuildDate>
     <atom:link href="/tools/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Ozone Repair</title>

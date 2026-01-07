@@ -99,7 +99,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../start.html">
+                <a href="../start/index.html">
                     
                     <span>Getting Started</span>
                 </a>
@@ -117,7 +117,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../concept.html">
+                <a href="../concept/index.html">
                     
                     <span>Architecture</span>
                 </a>
@@ -165,7 +165,17 @@ s=d.getElementsByTagName('script')[0];
                     
                         <li class="">
                            
-                           <a href="../concept/ozones3gateway.html">Ozone S3 Gateway</a>
+                               <a href="../concept/ozones3gateway.html">
+                                 
+                                 <span>Ozone S3 Gateway</span>
+                               </a>
+                               <ul class="nav">
+                               
+                                  <li class="">
+                                     <a href="../concept/s3-gateway-load-balancing.html">S3 Gateway Load Balancing</a>
+                                  </li>
+                               
+                               </ul>
                            
                         </li>
                     
@@ -199,7 +209,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../feature.html">
+                <a href="../feature/index.html">
                     
                     <span>Features</span>
                 </a>
@@ -353,7 +363,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../integration.html">
+                <a href="../integration/index.html">
                     
                     <span>Application Integrations</span>
                 </a>
@@ -383,7 +393,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../interface.html">
+                <a href="../interface/index.html">
                     
                     <span>Client Interfaces</span>
                 </a>
@@ -465,7 +475,7 @@ s=d.getElementsByTagName('script')[0];
     
         
             <li class="">
-                <a href="../security.html">
+                <a href="../security/index.html">
                     
                     <span>Security</span>
                 </a>
@@ -532,7 +542,7 @@ s=d.getElementsByTagName('script')[0];
         
             <li class="">
                 
-                   <a href="../tools.html">
+                   <a href="../tools/index.html">
                 
 
                     
@@ -544,7 +554,7 @@ s=d.getElementsByTagName('script')[0];
         
             <li class="">
                 
-                   <a href="../recipe.html">
+                   <a href="../recipe/index.html">
                 
 
                     
@@ -556,7 +566,7 @@ s=d.getElementsByTagName('script')[0];
         
             <li class="">
                 
-                   <a href="../troubleshooting.html">
+                   <a href="../troubleshooting/index.html">
                 
 
                     
@@ -584,7 +594,7 @@ s=d.getElementsByTagName('script')[0];
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="../index.html">Home</a></li>
-                  <li class="breadcrumb-item" aria-current="page"><a href="../start.html">Getting Started</a></li>
+                  <li class="breadcrumb-item" aria-current="page"><a href="../start/index.html">Getting Started</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Ozone on Kubernetes</li>
                 </ol>
               </nav>
@@ -634,6 +644,7 @@ s=d.getElementsByTagName('script')[0];
     </div>
 </div>
 
+<p><strong>Note:</strong> The Kubernetes examples and scripts in this project have been tested with Kubernetes 1.34.2 (k3s v1.34.2+k3s1).</p>
 <p>As the <em>apache/ozone</em> docker images are available from the dockerhub the deployment process is very similar to Minikube deployment. The only big difference is that we have dedicated set of k8s files for hosted clusters (for example we can use one datanode per host)
 Deploy to kubernetes</p>
 <p><code>kubernetes/examples</code> folder of the ozone distribution contains kubernetes deployment resource files for multiple use cases.</p>
@@ -686,7 +697,7 @@ kubectl port-forward scm-0 9876:9876
 <footer class="footer">
   <div class="container">
     <span class="small text-muted">
-      Version: 2.2.0-SNAPSHOT, Last Modified: April 3, 2025 <a class="hide-child link primary-color" href="https://github.com/apache/ozone/commit/ebcece42720d34b5979f4b43b1f365d3231c3ac8">ebcece4272</a>
+      Version: 2.2.0-SNAPSHOT, Last Modified: December 5, 2025 <a class="hide-child link primary-color" href="https://github.com/apache/ozone/commit/13f8a6767e86fdab0b6f15a405d1b4f94703ee6e">13f8a6767e</a>
     </span>
   </div>
 </footer>
